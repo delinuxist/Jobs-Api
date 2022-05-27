@@ -45,4 +45,8 @@ UserSchema.method("createJwt", function () {
   });
 });
 
+UserSchema.method("comparePassword", function (password) {
+  return bcrypt.compare(password, this.password);
+});
+
 module.exports = mongoose.model("User", UserSchema);
