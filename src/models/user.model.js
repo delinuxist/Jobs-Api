@@ -1,4 +1,9 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const secret = process.env.jwtSecret;
 
 const Schema = mongoose.Schema;
 
@@ -21,8 +26,23 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, "Please provide password"],
-    minlength: 6,
   },
+});
+
+UserSchema.pre("save", async function (next) {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+UserSchema.method("getName", function () {
+  return this.name;
+});
+
+UserSchema.method("createJwt", function () {
+  return jwt.sign({ userId: this._id, name: this.name }, secret, {
+    expiresIn: "3d",
+  });
 });
 
 module.exports = mongoose.model("User", UserSchema);
