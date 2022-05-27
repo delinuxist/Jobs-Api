@@ -1,5 +1,13 @@
-exports.createJob = (req, res) => {
-  res.send("create job");
+const Job = require("../models/job.model");
+const { StatusCodes } = require("http-status-codes");
+
+exports.createJob = async (req, res) => {
+  req.body.createdBy = req.user.userId;
+  const job = await Job.create(req.body);
+
+  res.status(StatusCodes.CREATED).json({
+    job,
+  });
 };
 
 exports.updateJob = (req, res) => {
