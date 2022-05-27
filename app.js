@@ -7,6 +7,7 @@ const connectDb = require("./src/config/db.config");
 require("dotenv").config();
 const authRoute = require("./src/routes/auth.routes");
 const jobsRoute = require("./src/routes/job.routes");
+const authMiddleware = require("./src/middlewares/auth.middleware");
 // external middlewares
 const cors = require("cors");
 
@@ -28,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(`${v1}/auth`, authRoute);
-app.use(`${v1}/jobs`, jobsRoute);
+app.use(`${v1}/jobs`, authMiddleware, jobsRoute);
 
 //custom middlewares
 app.use(NotFound);
