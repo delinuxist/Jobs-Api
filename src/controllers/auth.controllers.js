@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest } = require("../errors");
+const { BadRequest, Unauthenticated } = require("../errors");
 const User = require("../models/user.model");
 
 exports.register = async (req, res) => {
@@ -26,5 +26,28 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  res.send("login");
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new BadRequest("Please provide email and password");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Unauthenticated("Invalid Credentials");
+  }
+  const isMatch = await user.comparePassword(password);
+
+  if (!isMatch) {
+    throw new Unauthenticated("Invalid credentials");
+  }
+  const token = user.createJwt();
+
+  res.status(StatusCodes.OK).json({
+    user: {
+      name: user.getName(),
+    },
+    token,
+  });
 };
