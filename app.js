@@ -42,8 +42,8 @@ app.get(`/`, (req, res) => {
   res.send("Welcome to Jobs Api");
 });
 
-app.use(`/api/v1/auth`, authRoute);
-app.use(`/api/v1/jobs`, authMiddleware, jobsRoute);
+app.use(`${v1}/auth`, authRoute);
+app.use(`${v1}/jobs`, authMiddleware, jobsRoute);
 
 //custom middlewares
 app.use(NotFound);
