@@ -42,7 +42,7 @@ app.get(`/`, (req, res) => {
   res.send("Welcome to Jobs Api");
 });
 
-app.use(`${v1}/auth`, authRoute);
+app.use(`api/v1/auth`, authRoute);
 app.use(`${v1}/jobs`, authMiddleware, jobsRoute);
 
 //custom middlewares
