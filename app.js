@@ -38,7 +38,7 @@ app.use(cors());
 app.use(xss());
 
 //routes
-app.get(`${v1}/`, (req, res) => {
+app.get(`/`, (req, res) => {
   res.send("Welcome to Jobs Api");
 });
 
