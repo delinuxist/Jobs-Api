@@ -6,12 +6,12 @@ const User = require("../models/user.model");
 exports.register = async (req, res) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email: email });
+  // const user = await User.findOne({ email: email });
 
   // check if email already exists
-  if (user) {
-    throw new BadRequest(`User with email: ${email} already exits`);
-  }
+  // if (user) {
+  //   throw new BadRequest(`User with email: ${email} already exits`);
+  // }
 
   const newUser = await User.create({ ...req.body });
 
@@ -28,8 +28,16 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    throw new BadRequest("Please provide email and password");
+  if (!email && !password) {
+    throw new BadRequest("Please provide both email and password");
+  }
+
+  if (!email) {
+    throw new BadRequest("Please provide email");
+  }
+
+  if (!password) {
+    throw new BadRequest("Please provide password");
   }
 
   const user = await User.findOne({ email });
